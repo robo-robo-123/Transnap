@@ -48,6 +48,10 @@ namespace UniTransnap
 
       initializeCombobox();
 
+
+      BeforeLanguageBox.SelectedIndex = 0;
+      AfterLanguageBox.SelectedIndex = 1;
+
     }
 
     private void initializeCombobox()
@@ -142,8 +146,14 @@ namespace UniTransnap
       }
       catch (Exception e)
       {
-        OutputTextBlock.Text = "もう少し間をおいてください．";
+        dialogView();
       }
+    }
+
+
+    private async void dialogView()
+    {
+      this.webDlg.Title = "もう少し間をおいてください．"; var result = await this.webDlg.ShowAsync();
     }
 
     private void shareButton_Click(object sender, RoutedEventArgs e)
@@ -170,19 +180,19 @@ namespace UniTransnap
         }
         catch
         {
-          OutputTextBlock.Text = "もう少し間をおいてください．";
+          this.webDlg.Title = "もう少し間をおいてください．"; var result = await this.webDlg.ShowAsync();
           return;
         }
       }
 
-      if (BeforeLanguageBox.SelectedItem == null || AfterLanguageBox.SelectedItem == null) { OutputTextBlock.Text = "言語を選択してください"; }
+      if (BeforeLanguageBox.SelectedItem == null || AfterLanguageBox.SelectedItem == null)
+      { this.webDlg.Title = "言語を選択してください"; var result = await this.webDlg.ShowAsync(); }
       else
       {
         string data;
-        if (InputTextBox.Text == "") { OutputTextBlock.Text = "言葉を入力してください"; }
+        if (InputTextBox.Text == "") { this.webDlg.Title = "言葉を入力してください"; var result = await this.webDlg.ShowAsync();  }
         else
         {
-          OutputTextBlock.Text = "";
           Translator.LanguageServiceClient client = new Translator.LanguageServiceClient();
           // TextBoxに入力した文章を英語から日本語への翻訳を行う
           var result = await client.TranslateAsync(authenticationHeaderValue, InputTextBox.Text, before, after, null, null);
