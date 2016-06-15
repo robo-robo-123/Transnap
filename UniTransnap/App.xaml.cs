@@ -43,8 +43,12 @@ namespace UniTransnap
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
 
+      var view = Windows.UI.ViewManagement.ApplicationView.GetForCurrentView();
+      //最小サイズを指定
+      view.SetPreferredMinSize(new Size(350, 640));
+
 #if DEBUG
-            if (System.Diagnostics.Debugger.IsAttached)
+      if (System.Diagnostics.Debugger.IsAttached)
             {
                 this.DebugSettings.EnableFrameRateCounter = true;
             }

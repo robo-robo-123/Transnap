@@ -30,6 +30,7 @@ namespace UniTransnap
   {
     string authenticationHeaderValue = null;
     AdmAuthentication admAuth;
+    Windows.ApplicationModel.Resources.ResourceLoader rsrcs;
 
     string before, after;
     ObservableCollection<History> HistView;
@@ -43,6 +44,7 @@ namespace UniTransnap
       admAuth = new AdmAuthentication();
       HistView = new ObservableCollection<History>();
       dataPackage = new DataPackage();
+      rsrcs = new Windows.ApplicationModel.Resources.ResourceLoader();
 
       admAuth.AdmAuthentication2("roob_twi", "0OGK8MPcfIGFX6BtYhCbBI5V+EBp//2E3BF95HOu4Vs=");
 
@@ -52,6 +54,13 @@ namespace UniTransnap
       BeforeLanguageBox.SelectedIndex = 0;
       AfterLanguageBox.SelectedIndex = 1;
 
+
+
+    }
+
+    private void IC()
+    {
+      mainCommandBar.IsOpen = true;
     }
 
     private void initializeCombobox()
@@ -153,7 +162,7 @@ namespace UniTransnap
 
     private async void dialogView()
     {
-      this.webDlg.Title = "もう少し間をおいてください．"; var result = await this.webDlg.ShowAsync();
+      this.webDlg.Title = rsrcs.GetString("plzwrd"); var result = await this.webDlg.ShowAsync();
     }
 
     private void shareButton_Click(object sender, RoutedEventArgs e)
@@ -165,8 +174,13 @@ namespace UniTransnap
     {
       int x = HistoryList.SelectedIndex;
       //if (x != null)
-      string y = HistView[x].before_word;
-      InputTextBox.Text = y;
+      try
+      {
+        string y = HistView[x].before_word;
+        InputTextBox.Text = y;
+      }
+      catch(Exception ex)
+      { }
      // test(y);
     }
 
@@ -180,7 +194,7 @@ namespace UniTransnap
         }
         catch
         {
-          this.webDlg.Title = "もう少し間をおいてください．"; var result = await this.webDlg.ShowAsync();
+          this.webDlg.Title = rsrcs.GetString("plzwrd");  var result = await this.webDlg.ShowAsync();
           return;
         }
       }
@@ -206,10 +220,75 @@ namespace UniTransnap
           catch (Exception ex)
           {
           }
-          data = (string)BeforeLanguageBox.SelectedItem + "/" + (string)AfterLanguageBox.SelectedItem + "/" + InputTextBox.Text + "/" + result + "\n";
-          DataSave(data);
-
+         // data = (string)BeforeLanguageBox.SelectedItem + "/" + (string)AfterLanguageBox.SelectedItem + "/" + InputTextBox.Text + "/" + result + "\n";
+         // DataSave(data);
         }
+      }
+    }
+
+    private void CopyButton_Tapped(object sender, TappedRoutedEventArgs e)
+    {
+      dataPackage.SetText(transResult);
+      Clipboard.SetContent(dataPackage);
+    }
+
+    private void saveButton_Click(object sender, RoutedEventArgs e)
+    {
+
+
+      try
+      {
+      int x = HistoryList.SelectedIndex;
+      string msg = HistView[x].before_langage + "/" + HistView[x].after_langage + "/" + HistView[x].before_word + "/" + HistView[x].after_word + "\n";
+        DataSave(msg);
+        /*
+        IList<Object> items = HistoryList.SelectedItems as IList<Object>;
+        string msg ="";
+        foreach (Object item in items)
+        {
+          msg += items.ToString();
+        }
+        */
+        //OutputTextBox.Text = msg;
+      }
+      catch(Exception ex)
+      { }
+      // data = (string)BeforeLanguageBox.SelectedItem + "/" + (string)AfterLanguageBox.SelectedItem + "/" + InputTextBox.Text + "/" + result + "\n";
+      // DataSave(data);
+
+    }
+
+    private void copyClipboardButton_Tapped(object sender, TappedRoutedEventArgs e)
+    {
+      int x = HistoryList.SelectedIndex;
+      try
+      {
+        dataPackage.SetText(HistView[x].after_word);
+        Clipboard.SetContent(dataPackage);
+      }
+      catch (Exception ex)
+      { }
+
+    }
+
+    private async void allDeleteButton_Tapped(object sender, TappedRoutedEventArgs e)
+    {
+
+      String filePath = "date1.txt";
+      StorageFolder roamingFolder = ApplicationData.Current.RoamingFolder;
+      try
+      {
+        StorageFile file = await roamingFolder.GetFileAsync(filePath);
+
+        try
+        {
+          await file.DeleteAsync();
+        }
+        catch { }
+      }
+      catch (Exception ex)
+      {
+        // ファイル無し
       }
     }
 
@@ -224,6 +303,7 @@ namespace UniTransnap
       AfterLanguageBox.SelectedIndex = b;
 
     }
+
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
@@ -244,6 +324,7 @@ namespace UniTransnap
         IList<String> strList = await FileIO.ReadLinesAsync(file);
         foreach (String str in strList)
         {
+          
           //          msg = str;
           DataRestore(str);
           //          datas.Add(str);
@@ -285,28 +366,39 @@ namespace UniTransnap
 
     async private void DeleteButton_Tapped(object sender, TappedRoutedEventArgs e)
     {
-    
-      for (int i = 0; i < HistView.Count; i++)
-      {
-        HistView.RemoveAt(i);
-      }
-      String filePath = "date1.txt";
-      StorageFolder roamingFolder = ApplicationData.Current.RoamingFolder;
+
+
       try
       {
-        StorageFile file = await roamingFolder.GetFileAsync(filePath);
+        int x = HistoryList.SelectedIndex;
+      HistView.RemoveAt(x);
+      }
+      catch { }
+
+  /*
+        for (int i = 0; i < HistView.Count; i++)
+        {
+          HistView.RemoveAt(i);
+        }
+        String filePath = "date1.txt";
+        StorageFolder roamingFolder = ApplicationData.Current.RoamingFolder;
         try
         {
-          await file.DeleteAsync();
+          StorageFile file = await roamingFolder.GetFileAsync(filePath);
+
+          try
+          {
+            await file.DeleteAsync();
+          }
+          catch { }
         }
-        catch { }
-      }
-      catch (Exception ex)
-      {
-        // ファイル無し
-      }
-    
-    }
+        catch (Exception ex)
+        {
+          // ファイル無し
+        }
+
+  */
+}
 
 
 /// <summary>
@@ -315,22 +407,13 @@ namespace UniTransnap
 /// <param name="sender"></param>
 /// <param name="e"></param>
 
-    private void CopyButton_Tapped(object sender, TappedRoutedEventArgs e)
-    {
-      dataPackage.SetText(transResult);
-      Clipboard.SetContent(dataPackage);
-    }
+
 
     private void HistoryList_Tapped(object sender, TappedRoutedEventArgs e)
     {
-      int x = HistoryList.SelectedIndex;
-      try
-      {
-        dataPackage.SetText(HistView[x].after_word);
-        Clipboard.SetContent(dataPackage);
-      }
-      catch (Exception ex)
-      { }
+      IC();
+
+
     }
 
     /// <summary>

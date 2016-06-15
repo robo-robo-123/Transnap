@@ -132,6 +132,9 @@
   <data name="aftwrd_p" xml:space="preserve">
     <value>The result here is the output</value>
   </data>
+  <data name="aldlt.Label" xml:space="preserve">
+    <value>Delete all saved history</value>
+  </data>
   <data name="ar" xml:space="preserve">
     <value>Arabic</value>
   </data>
@@ -166,7 +169,7 @@
     <value>Hindi</value>
   </data>
   <data name="hstry" xml:space="preserve">
-    <value>Histroy(Tap the copy result)</value>
+    <value>Histroy</value>
   </data>
   <data name="ja" xml:space="preserve">
     <value>Japanese</value>
@@ -177,6 +180,9 @@
   <data name="outrslt" xml:space="preserve">
     <value>Output the result</value>
   </data>
+  <data name="plzwrd" xml:space="preserve">
+    <value>Please enter the word</value>
+  </data>
   <data name="pp" xml:space="preserve">
     <value>Privacy Policy</value>
   </data>
@@ -185,6 +191,18 @@
   </data>
   <data name="ru" xml:space="preserve">
     <value>Russian</value>
+  </data>
+  <data name="slctdListCopy.Label" xml:space="preserve">
+    <value>Copy the selected result</value>
+  </data>
+  <data name="slctdListDelete.Label" xml:space="preserve">
+    <value>Delete the selected result</value>
+  </data>
+  <data name="slctdListReload.Label" xml:space="preserve">
+    <value>Reload the selected result</value>
+  </data>
+  <data name="slctdListSave.Label" xml:space="preserve">
+    <value>Save the selected result</value>
   </data>
   <data name="trnslt.Content" xml:space="preserve">
     <value>Translate</value>

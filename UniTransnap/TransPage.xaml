@@ -8,28 +8,35 @@
     mc:Ignorable="d">
 
   <Page.BottomAppBar>
-    <CommandBar ClosedDisplayMode="Compact" VerticalAlignment="Bottom" >
+    <CommandBar x:Name="mainCommandBar" ClosedDisplayMode="Minimal" VerticalAlignment="Bottom" IsOpen="False">
       <CommandBar.SecondaryCommands>
-        <!--
-        <AppBarButton x:Name="userInfoCommand" Icon="Directions" Label="UserInfo" Click="userInfoCommand_Click" />-->
+
+        <AppBarButton x:Name="allDeleteButton" x:Uid="aldlt" Label="保存した結果を削除" Tapped="allDeleteButton_Tapped"  />
       </CommandBar.SecondaryCommands>
 
-      <AppBarButton x:Name="DeleteButton" x:Uid="adlis" Icon="Delete" Label="削除" 
+      <AppBarButton x:Name="DeleteButton" x:Uid="slctdListDelete" Icon="Delete" Label="リストから削除" 
                         VerticalAlignment="Stretch" ToolTipService.ToolTip="履歴を削除します" Tapped="DeleteButton_Tapped" ></AppBarButton>
 
-      <AppBarButton x:Name="copyButton"  Label="Copy to clipbord" Tapped="CopyButton_Tapped" >
+      <AppBarButton x:Name="copyClipboardButton" x:Uid="slctdListCopy"  Label="Copy to clipboard" Tapped="copyClipboardButton_Tapped"  >
         <AppBarButton.Icon>
           <FontIcon Glyph="&#xE8C8;" FontFamily="Segoe MDL2 Assets" FontSize="20" />
         </AppBarButton.Icon>
       </AppBarButton>
-
+<!--
       <AppBarButton x:Name="shareButton"  Label="share" Click="shareButton_Click"  >
         <AppBarButton.Icon>
           <FontIcon Glyph="&#xE72D;" FontFamily="Segoe MDL2 Assets" FontSize="20" />
         </AppBarButton.Icon>
       </AppBarButton>
-      
-      <AppBarButton x:Name="reloadButton"  Label="reload" Click="reloadButton_Click"  >
+ -->
+
+      <AppBarButton x:Name="saveButton" x:Uid="slctdListSave" Label="save" Click="saveButton_Click"  >
+        <AppBarButton.Icon>
+          <FontIcon Glyph="&#xE74E;" FontFamily="Segoe MDL2 Assets" FontSize="20" />
+        </AppBarButton.Icon>
+      </AppBarButton>
+
+      <AppBarButton x:Name="reloadButton" x:Uid="slctdListReload" Label="reload" Click="reloadButton_Click"  >
         <AppBarButton.Icon>
           <FontIcon Glyph="&#xE7A6;" FontFamily="Segoe MDL2 Assets" FontSize="20" />
         </AppBarButton.Icon>
@@ -47,20 +54,25 @@
 
     </Grid.RowDefinitions>
 
-    <RelativePanel Margin="0,0,0,50" HorizontalAlignment="Center">
-      <StackPanel x:Name="langPanel" Orientation="Horizontal"  >
-        <ComboBox x:Name="BeforeLanguageBox"   Grid.Column="0" Header="翻訳前言語" Margin="10,10,0,0" SelectionChanged="BeforeLanguageBox_SelectionChanged" ToolTipService.ToolTip="" PlaceholderText="言語を選択してください"/>
-        <Button x:Name="ChengeButton" Grid.Column="1" Content="⇔" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="14" Tapped="ChengeButton_Tapped" ></Button>
-        <ComboBox x:Name="AfterLanguageBox" Grid.Column="2" Header="翻訳後言語" Margin="0,10,10,0" SelectionChanged="AfterLanguageBox_SelectionChanged" PlaceholderText="言語を選択してください" />
-      </StackPanel>
-      <RelativePanel x:Name="beforelangPanel"  RelativePanel.Below="langPanel">
-        <TextBox x:Name="InputTextBox" Header="翻訳元短文・単語"  Margin="10" PlaceholderText="翻訳したい言葉を記入して下さい" MaxLength="100" TextWrapping="Wrap" MaxWidth="300"/>
-        <Button x:Name="TranslateButton" Grid.Row="1" x:Uid="trnslt" Content="翻訳"  Tapped="TranslateButton_Tapped" VerticalAlignment="Top" Margin="-0.333,36,0.333,0" RelativePanel.RightOf="InputTextBox" HorizontalAlignment="Right"/>
-      </RelativePanel>
-      <TextBox x:Name="OutputTextBox" Header="翻訳結果・単語" IsReadOnly="True" Margin="10" Text="{Binding op, Mode=TwoWay}" PlaceholderText="結果がここに出力されます" RelativePanel.Below="beforelangPanel" TextWrapping="Wrap" MaxWidth="300"/>
 
-      <ListView x:Name="HistoryList" Header="履歴(タップしてコピー)" SelectionMode="Single"   ItemsSource="{Binding}"  IsRightTapEnabled="False"  Margin="25,0" 
-    			Grid.Row="4" FontSize="24" Tapped="HistoryList_Tapped" RelativePanel.Below="OutputTextBox">
+    <RelativePanel Margin="0,0,0,50" HorizontalAlignment="Center">
+      <RelativePanel x:Name="transferPanel">
+      <StackPanel x:Name="langPanel" Orientation="Horizontal"  >
+          <ComboBox x:Name="BeforeLanguageBox"  x:Uid="bfrlng"  Header="翻訳前言語" Margin="10,10,0,0" SelectionChanged="BeforeLanguageBox_SelectionChanged" ToolTipService.ToolTip=""  PlaceholderText="言語を選択してください"/>
+        <Button x:Name="ChengeButton"  Content="⇔" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="14" Tapped="ChengeButton_Tapped" ></Button>
+          <ComboBox x:Name="AfterLanguageBox" x:Uid="aftlng" Header="翻訳後言語" Margin="0,10,10,0" SelectionChanged="AfterLanguageBox_SelectionChanged" PlaceholderText="言語を選択してください" />
+      </StackPanel>
+      <RelativePanel x:Name="beforeWordPanel"  RelativePanel.Below="langPanel">
+          <TextBox x:Name="InputTextBox" x:Uid="bfrwrd" Header="翻訳元短文・単語"  Margin="10" PlaceholderText="翻訳したい言葉を記入して下さい" MaxLength="100" TextWrapping="Wrap" MaxWidth="300"/>
+        <Button x:Name="TranslateButton" Grid.Row="1" x:Uid="trnslt"  Content="翻訳"  Tapped="TranslateButton_Tapped" VerticalAlignment="Top" Margin="-0.333,36,0.333,0" RelativePanel.RightOf="InputTextBox" HorizontalAlignment="Right"/>
+      </RelativePanel>
+      <RelativePanel x:Name="afterWordPanel"  RelativePanel.Below="beforeWordPanel">
+          <TextBox x:Name="OutputTextBox" x:Uid="aftwrd" Header="翻訳結果・単語" IsReadOnly="True" Margin="10" Text="{Binding op, Mode=TwoWay}" PlaceholderText="結果がここに出力されます"  MaxWidth="300" TextWrapping="Wrap" />
+          <Button x:Name="CopyButton"  x:Uid="clpcpy"  Content="コピー"  Tapped="CopyButton_Tapped" VerticalAlignment="Top" Margin="-0.333,36,0.333,0" RelativePanel.RightOf="OutputTextBox" HorizontalAlignment="Right" ToolTipService.ToolTip="クリップボードにコピー"/>
+      </RelativePanel>
+      </RelativePanel>
+      <ListView x:Name="HistoryList" x:Uid="hstry" Header="履歴" SelectionMode="Single"   ItemsSource="{Binding}"  IsRightTapEnabled="False"  Margin="25,0" 
+    			Grid.Row="4" FontSize="24" Tapped="HistoryList_Tapped" RelativePanel.Below="transferPanel">
         <ListView.ItemTemplate>
           <DataTemplate>
             <StackPanel x:Name="checkPanel" Orientation="Vertical" Width="Auto">
@@ -71,8 +83,8 @@
                 <TextBlock Text="{Binding after_langage}" FontSize="12" FontFamily="Segoe UI" Margin="5,0" Padding="5,5,0,0"/>
               </StackPanel>
 
-              <TextBlock Text="{Binding before_word}" FontSize="16" FontFamily="Segoe UI" Margin="5,0" Padding="5,5,0,0"/>
-              <TextBlock Text="{Binding after_word}" FontSize="16" FontFamily="Segoe UI" Margin="5,0" Padding="5,0,0,5"/>
+              <TextBlock Text="{Binding before_word}" FontSize="16" FontFamily="Segoe UI" Margin="5,0" Padding="5,5,0,0" TextWrapping="Wrap"/>
+              <TextBlock Text="{Binding after_word}" FontSize="16" FontFamily="Segoe UI" Margin="5,0" Padding="5,0,0,5" TextWrapping="Wrap"/>
             </StackPanel>
 
           </DataTemplate>
@@ -86,11 +98,13 @@
 
 
     <!-- Back button and page title -->
-    <Grid x:Name="adGrid1" Grid.Row="5" Background="LightBlue" Width="300" Height="250" Margin="0,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Bottom" >
+    <Grid x:Name="adGrid1" Grid.Row="5" Background="LightBlue" Width="160" Height="600" Margin="0,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Bottom" >
 
       <!-- 広告が来ないときに表示するコンテンツ -->
       <TextBlock  Text="広告欄" Foreground="White" FontSize="18"
                        HorizontalAlignment="Right" Margin="0,5,5,0"/>
+      
+      
       <!--
         <TextBlock Foreground="White" VerticalAlignment="Bottom" Margin="5,0,0,5" x:Uid="as" >
               アプリのサイト：<LineBreak/><Hyperlink
@@ -134,7 +148,7 @@
             <AdaptiveTrigger MinWindowWidth="770" />
           </VisualState.StateTriggers>
           <VisualState.Setters>
-            <Setter Target="HistoryList.(RelativePanel.RightOf)"  Value="langPanel"/>
+            <Setter Target="HistoryList.(RelativePanel.RightOf)"  Value="transferPanel"/>
             <Setter Target="HistoryList.(RelativePanel.Below)"  Value=""/>
             <Setter Target="adGrid1.Visibility" Value="Visible" />
             <Setter Target="adGrid2.Visibility" Value="Collapsed" />
@@ -146,7 +160,7 @@
             <AdaptiveTrigger MinWindowWidth="640" />
           </VisualState.StateTriggers>
           <VisualState.Setters>
-            <Setter Target="HistoryList.(RelativePanel.RightOf)"  Value="langPanel"/>
+            <Setter Target="HistoryList.(RelativePanel.RightOf)"  Value="transferPanel"/>
             <Setter Target="HistoryList.(RelativePanel.Below)"  Value=""/>
             <Setter Target="adGrid2.Visibility" Value="Visible" />
             <Setter Target="adGrid1.Visibility" Value="Collapsed" />

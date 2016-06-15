@@ -127,10 +127,13 @@
     <value>言語を選択してください</value>
   </data>
   <data name="aftwrd" xml:space="preserve">
-    <value>翻訳語文章・単語</value>
+    <value>翻訳結果・単語</value>
   </data>
   <data name="aftwrd_p" xml:space="preserve">
     <value>結果がここに出力されます</value>
+  </data>
+  <data name="aldlt.Label" xml:space="preserve">
+    <value>保存した履歴を削除</value>
   </data>
   <data name="ar" xml:space="preserve">
     <value>アラビア語</value>
@@ -166,7 +169,7 @@
     <value>ヒンディー語</value>
   </data>
   <data name="hstry" xml:space="preserve">
-    <value>履歴(タップして結果をコピー)</value>
+    <value>履歴</value>
   </data>
   <data name="ja" xml:space="preserve">
     <value>日本語</value>
@@ -177,6 +180,9 @@
   <data name="outrslt" xml:space="preserve">
     <value>結果を出力します</value>
   </data>
+  <data name="plzwrd" xml:space="preserve">
+    <value>言葉を入力してください</value>
+  </data>
   <data name="pp" xml:space="preserve">
     <value>プライバシーポリシー</value>
   </data>
@@ -185,6 +191,18 @@
   </data>
   <data name="ru" xml:space="preserve">
     <value>ロシア語</value>
+  </data>
+  <data name="slctdListCopy.Label" xml:space="preserve">
+    <value>選択した結果をコピー</value>
+  </data>
+  <data name="slctdListDelete.Label" xml:space="preserve">
+    <value>選択した結果を削除</value>
+  </data>
+  <data name="slctdListReload.Label" xml:space="preserve">
+    <value>選択した結果を再読み込み</value>
+  </data>
+  <data name="slctdListSave.Label" xml:space="preserve">
+    <value>選択した結果を保存</value>
   </data>
   <data name="trnslt.Content" xml:space="preserve">
     <value>翻訳</value>
