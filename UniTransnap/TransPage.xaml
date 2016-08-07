@@ -55,7 +55,7 @@
     </Grid.RowDefinitions>
 
 
-    <RelativePanel Margin="0,0,0,50" HorizontalAlignment="Center">
+    <RelativePanel Margin="0,0,0,50" HorizontalAlignment="Left" >
       <RelativePanel x:Name="transferPanel">
         <StackPanel x:Name="langPanel" Orientation="Horizontal"  >
           <ComboBox x:Name="BeforeLanguageBox"  x:Uid="bfrlng"  Header="翻訳前言語" Margin="10,10,0,0" SelectionChanged="BeforeLanguageBox_SelectionChanged" ToolTipService.ToolTip=""  PlaceholderText="言語を選択してください"/>
@@ -67,9 +67,9 @@
         </RelativePanel>
         <RelativePanel x:Name="buttonPanel" RelativePanel.Below="beforeWordPanel" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" HorizontalAlignment="Center">
           <StackPanel Orientation="Horizontal"  >
-          <Button x:Name="ResetButton" Content="リセット" Click="ResetButton_Click"/>
-          <Button x:Name="changeWordButton" Content="⇕" Margin="10,0,0,0" Click="changeWordButton_Click" />
-          <Button x:Name="TranslateButton" Grid.Row="1" x:Uid="trnslt"  Content="翻訳"  Tapped="TranslateButton_Tapped" Margin="10,0,0,0" />
+            <Button x:Name="ResetButton" Content="リセット" Click="ResetButton_Click"/>
+            <Button x:Name="changeWordButton" Content="⇕" Margin="10,0,0,0" Click="changeWordButton_Click" />
+            <Button x:Name="TranslateButton" Grid.Row="1" x:Uid="trnslt"  Content="翻訳"  Tapped="TranslateButton_Tapped" Margin="10,0,0,0" />
           </StackPanel>
         </RelativePanel>
         <RelativePanel x:Name="afterWordPanel"  RelativePanel.Below="buttonPanel"  RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True">
@@ -78,10 +78,10 @@
         </RelativePanel>
       </RelativePanel>
       <ListView x:Name="HistoryList" x:Uid="hstry" Header="履歴" SelectionMode="Single"   ItemsSource="{Binding}"  IsRightTapEnabled="False"  Margin="25,0" 
-    			Grid.Row="4" FontSize="24" Tapped="HistoryList_Tapped" RelativePanel.Below="transferPanel">
+    			Grid.Row="4" FontSize="24" Tapped="HistoryList_Tapped" RelativePanel.Below="transferPanel" MaxWidth="400">
         <ListView.ItemTemplate>
           <DataTemplate>
-            <StackPanel x:Name="checkPanel" Orientation="Vertical" Width="Auto">
+            <StackPanel x:Name="checkPanel" Orientation="Vertical" >
 
               <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding before_langage}" FontSize="12" FontFamily="Segoe UI" Margin="5,0,0,0" Padding="5,5,0,0"/>
@@ -105,6 +105,7 @@
 
     <!-- Back button and page title -->
     <Grid x:Name="adGrid1" Grid.Row="5" Background="LightBlue" Width="160" Height="600" Margin="0,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Bottom" >
+      <my:AdMediatorControl x:Name="AdMediator_43F460" Height="600" Id="AdMediator-Id-3B9A535C-FA1A-4BC0-B5F6-F1B72919E5BB" Width="160"/>
       <!-- 広告が来ないときに表示するコンテンツ
       <TextBlock  Text="広告欄" Foreground="White" FontSize="18"
                        HorizontalAlignment="Right" Margin="0,5,5,0"/> 
@@ -113,11 +114,12 @@
 
     <Grid x:Name="adGrid2" Grid.Row="5" Background="LightBlue" Width="320" Height="50" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"  RelativePanel.Below="HistoryList">
 
-      <!-- 広告が来ないときに表示するコンテンツ 
+      <my:AdMediatorControl x:Name="AdMediator_3F8F17" Height="50" Id="AdMediator-Id-38A1D99D-3D7C-4F8C-9FD6-68EE1953B4D5" Width="320" Margin="0,0,0,0"/>
+      <!--  広告が来ないときに表示するコンテンツ 
       <TextBlock  Text="広告欄" Foreground="White" FontSize="18"
                        HorizontalAlignment="Right" Margin="0,5,5,0"/>
-      <my:AdMediatorControl x:Name="AdMediator_4DD4AE" HorizontalAlignment="Left" Height="50" Id="AdMediator-Id-B09CECEB-96CD-4030-9AAB-64F04FC28D62" VerticalAlignment="Top" Width="320"/>-->
-
+      <my:AdMediatorControl x:Name="AdMediator_4DD4AE" HorizontalAlignment="Left" Height="50" Id="AdMediator-Id-B09CECEB-96CD-4030-9AAB-64F04FC28D62" VerticalAlignment="Top" Width="320"/>
+-->
     </Grid>
 
     <ContentDialog x:Name="webDlg"
@@ -130,13 +132,14 @@
       <VisualStateGroup>
         <VisualState x:Name="adcollumRegion">
           <VisualState.StateTriggers>
-            <AdaptiveTrigger MinWindowWidth="770" />
+            <AdaptiveTrigger MinWindowWidth="800" />
           </VisualState.StateTriggers>
           <VisualState.Setters>
             <Setter Target="HistoryList.(RelativePanel.RightOf)"  Value="transferPanel"/>
             <Setter Target="HistoryList.(RelativePanel.Below)"  Value=""/>
             <Setter Target="adGrid1.Visibility" Value="Visible" />
             <Setter Target="adGrid2.Visibility" Value="Collapsed" />
+            <Setter Target="HistoryList.Margin" Value="0,0,-160,0"/>
           </VisualState.Setters>
           <!-- The default Visibility properties are set in the XAML that defines the objects. -->
         </VisualState>
