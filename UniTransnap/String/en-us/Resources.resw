@@ -196,7 +196,7 @@
     <value>Copy the selected result</value>
   </data>
   <data name="slctdListDelete.Label" xml:space="preserve">
-    <value>Delete the selected result</value>
+    <value>Remove the selected result</value>
   </data>
   <data name="slctdListReload.Label" xml:space="preserve">
     <value>Reload the selected result</value>

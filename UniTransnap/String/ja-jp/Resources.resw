@@ -133,7 +133,7 @@
     <value>結果がここに出力されます</value>
   </data>
   <data name="aldlt.Label" xml:space="preserve">
-    <value>保存した履歴を削除</value>
+    <value>保存した履歴を一括削除</value>
   </data>
   <data name="ar" xml:space="preserve">
     <value>アラビア語</value>
@@ -193,16 +193,16 @@
     <value>ロシア語</value>
   </data>
   <data name="slctdListCopy.Label" xml:space="preserve">
-    <value>選択した結果をコピー</value>
+    <value>翻訳結果をコピー</value>
   </data>
   <data name="slctdListDelete.Label" xml:space="preserve">
-    <value>選択した結果を削除</value>
+    <value>選択した履歴を消去</value>
   </data>
   <data name="slctdListReload.Label" xml:space="preserve">
-    <value>選択した結果を再読み込み</value>
+    <value>選択した履歴を再読み込み</value>
   </data>
   <data name="slctdListSave.Label" xml:space="preserve">
-    <value>選択した結果を保存</value>
+    <value>選択した履歴を保存</value>
   </data>
   <data name="trnslt.Content" xml:space="preserve">
     <value>翻訳</value>

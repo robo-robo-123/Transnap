@@ -283,6 +283,7 @@ namespace UniTransnap
         try
         {
           await file.DeleteAsync();
+          HistoryList.ItemsSource = null;
         }
         catch { }
       }
@@ -290,6 +291,25 @@ namespace UniTransnap
       {
         // ファイル無し
       }
+    }
+
+    private void ResetButton_Click(object sender, RoutedEventArgs e)
+    {
+      BeforeLanguageBox.SelectedIndex = 0;
+      AfterLanguageBox.SelectedIndex = 1;
+      InputTextBox.Text = "";
+      OutputTextBox.Text = "";
+    }
+
+    private void changeWordButton_Click(object sender, RoutedEventArgs e)
+    {
+      string b, a;
+
+      b = InputTextBox.Text;
+      a = OutputTextBox.Text;
+
+      InputTextBox.Text = a;
+      OutputTextBox.Text = b;
     }
 
     private void ChengeButton_Tapped(object sender, TappedRoutedEventArgs e)
@@ -397,8 +417,23 @@ namespace UniTransnap
           // ファイル無し
         }
 
-  */
-}
+      StorageFolder localFolder = ApplicationData.Current.LocalFolder;
+      try
+      {
+        StorageFile file = await localFolder.CreateFileAsync(filePath, CreationCollisionOption.ReplaceExisting);
+        datas.RemoveAt(index);
+        foreach (String str in datas)
+        {
+          await FileIO.AppendTextAsync(file, str + '\n');
+        }
+      }
+
+      catch (Exception ex)
+      {
+
+      }
+      */
+    }
 
 
 /// <summary>

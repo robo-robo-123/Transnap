@@ -1,4 +1,4 @@
-﻿<Page
+﻿<Page xmlns:my="using:Microsoft.AdMediator.Universal" 
     x:Class="UniTransnap.TransPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -22,7 +22,7 @@
           <FontIcon Glyph="&#xE8C8;" FontFamily="Segoe MDL2 Assets" FontSize="20" />
         </AppBarButton.Icon>
       </AppBarButton>
-<!--
+      <!--
       <AppBarButton x:Name="shareButton"  Label="share" Click="shareButton_Click"  >
         <AppBarButton.Icon>
           <FontIcon Glyph="&#xE72D;" FontFamily="Segoe MDL2 Assets" FontSize="20" />
@@ -57,19 +57,25 @@
 
     <RelativePanel Margin="0,0,0,50" HorizontalAlignment="Center">
       <RelativePanel x:Name="transferPanel">
-      <StackPanel x:Name="langPanel" Orientation="Horizontal"  >
+        <StackPanel x:Name="langPanel" Orientation="Horizontal"  >
           <ComboBox x:Name="BeforeLanguageBox"  x:Uid="bfrlng"  Header="翻訳前言語" Margin="10,10,0,0" SelectionChanged="BeforeLanguageBox_SelectionChanged" ToolTipService.ToolTip=""  PlaceholderText="言語を選択してください"/>
-        <Button x:Name="ChengeButton"  Content="⇔" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="14" Tapped="ChengeButton_Tapped" ></Button>
+          <Button x:Name="ChengeButton"  Content="⇔" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="14" Tapped="ChengeButton_Tapped" ></Button>
           <ComboBox x:Name="AfterLanguageBox" x:Uid="aftlng" Header="翻訳後言語" Margin="0,10,10,0" SelectionChanged="AfterLanguageBox_SelectionChanged" PlaceholderText="言語を選択してください" />
-      </StackPanel>
-      <RelativePanel x:Name="beforeWordPanel"  RelativePanel.Below="langPanel">
-          <TextBox x:Name="InputTextBox" x:Uid="bfrwrd" Header="翻訳元短文・単語"  Margin="10" PlaceholderText="翻訳したい言葉を記入して下さい" MaxLength="100" TextWrapping="Wrap" MaxWidth="300"/>
-        <Button x:Name="TranslateButton" Grid.Row="1" x:Uid="trnslt"  Content="翻訳"  Tapped="TranslateButton_Tapped" VerticalAlignment="Top" Margin="-0.333,36,0.333,0" RelativePanel.RightOf="InputTextBox" HorizontalAlignment="Right"/>
-      </RelativePanel>
-      <RelativePanel x:Name="afterWordPanel"  RelativePanel.Below="beforeWordPanel">
-          <TextBox x:Name="OutputTextBox" x:Uid="aftwrd" Header="翻訳結果・単語" IsReadOnly="True" Margin="10" Text="{Binding op, Mode=TwoWay}" PlaceholderText="結果がここに出力されます"  MaxWidth="300" TextWrapping="Wrap" />
-          <Button x:Name="CopyButton"  x:Uid="clpcpy"  Content="コピー"  Tapped="CopyButton_Tapped" VerticalAlignment="Top" Margin="-0.333,36,0.333,0" RelativePanel.RightOf="OutputTextBox" HorizontalAlignment="Right" ToolTipService.ToolTip="クリップボードにコピー"/>
-      </RelativePanel>
+        </StackPanel>
+        <RelativePanel x:Name="beforeWordPanel"  RelativePanel.Below="langPanel" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True">
+          <TextBox x:Name="InputTextBox" x:Uid="bfrwrd" Header="翻訳元短文・単語"  Margin="10" PlaceholderText="翻訳したい言葉を記入して下さい" MaxLength="100" TextWrapping="Wrap" MaxWidth="300" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True"/>
+        </RelativePanel>
+        <RelativePanel x:Name="buttonPanel" RelativePanel.Below="beforeWordPanel" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" HorizontalAlignment="Center">
+          <StackPanel Orientation="Horizontal"  >
+          <Button x:Name="ResetButton" Content="リセット" Click="ResetButton_Click"/>
+          <Button x:Name="changeWordButton" Content="⇕" Margin="10,0,0,0" Click="changeWordButton_Click" />
+          <Button x:Name="TranslateButton" Grid.Row="1" x:Uid="trnslt"  Content="翻訳"  Tapped="TranslateButton_Tapped" Margin="10,0,0,0" />
+          </StackPanel>
+        </RelativePanel>
+        <RelativePanel x:Name="afterWordPanel"  RelativePanel.Below="buttonPanel"  RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True">
+          <TextBox x:Name="OutputTextBox" x:Uid="aftwrd" Header="翻訳結果・単語" IsReadOnly="True" Margin="10" Text="{Binding op, Mode=TwoWay}" PlaceholderText="結果がここに出力されます"  MaxWidth="300" TextWrapping="Wrap" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True"/>
+          <!--<Button x:Name="CopyButton"  x:Uid="clpcpy"  Content="コピー"  Tapped="CopyButton_Tapped" VerticalAlignment="Top" Margin="-0.333,36,0.333,0" RelativePanel.RightOf="OutputTextBox" HorizontalAlignment="Right" ToolTipService.ToolTip="クリップボードにコピー"/>-->
+        </RelativePanel>
       </RelativePanel>
       <ListView x:Name="HistoryList" x:Uid="hstry" Header="履歴" SelectionMode="Single"   ItemsSource="{Binding}"  IsRightTapEnabled="False"  Margin="25,0" 
     			Grid.Row="4" FontSize="24" Tapped="HistoryList_Tapped" RelativePanel.Below="transferPanel">
@@ -99,39 +105,18 @@
 
     <!-- Back button and page title -->
     <Grid x:Name="adGrid1" Grid.Row="5" Background="LightBlue" Width="160" Height="600" Margin="0,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Bottom" >
-
-      <!-- 広告が来ないときに表示するコンテンツ -->
+      <!-- 広告が来ないときに表示するコンテンツ
       <TextBlock  Text="広告欄" Foreground="White" FontSize="18"
-                       HorizontalAlignment="Right" Margin="0,5,5,0"/>
-      
-      
-      <!--
-        <TextBlock Foreground="White" VerticalAlignment="Bottom" Margin="5,0,0,5" x:Uid="as" >
-              アプリのサイト：<LineBreak/><Hyperlink
-                NavigateUri="https://sites.google.com/site/123roborobo123/app/typecompatibilitychecker-for-xy"
-                Foreground="LightCyan" Language="ja-JP" >タイプ相性チェッカー for XY</Hyperlink>
-          <LineBreak/><Hyperlink
-                NavigateUri="https://sites.google.com/site/123roborobo123/app/typecompatibilitychecker-for-xy"
-                Foreground="LightCyan" Language="en-US" >Type Affinity Checker for XY</Hyperlink>
-        </TextBlock>
--->
+                       HorizontalAlignment="Right" Margin="0,5,5,0"/> 
+      <my:AdMediatorControl x:Name="AdMediator_DA0686" HorizontalAlignment="Left" Height="600" Id="AdMediator-Id-7331D572-62A6-4A0B-A2D5-7AFBA3CFFCC6" VerticalAlignment="Top" Width="160"/>-->
     </Grid>
 
     <Grid x:Name="adGrid2" Grid.Row="5" Background="LightBlue" Width="320" Height="50" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"  RelativePanel.Below="HistoryList">
 
-      <!-- 広告が来ないときに表示するコンテンツ -->
+      <!-- 広告が来ないときに表示するコンテンツ 
       <TextBlock  Text="広告欄" Foreground="White" FontSize="18"
                        HorizontalAlignment="Right" Margin="0,5,5,0"/>
-      <!--
-        <TextBlock Foreground="White" VerticalAlignment="Bottom" Margin="5,0,0,5" x:Uid="as" >
-              アプリのサイト：<LineBreak/><Hyperlink
-                NavigateUri="https://sites.google.com/site/123roborobo123/app/typecompatibilitychecker-for-xy"
-                Foreground="LightCyan" Language="ja-JP" >タイプ相性チェッカー for XY</Hyperlink>
-          <LineBreak/><Hyperlink
-                NavigateUri="https://sites.google.com/site/123roborobo123/app/typecompatibilitychecker-for-xy"
-                Foreground="LightCyan" Language="en-US" >Type Affinity Checker for XY</Hyperlink>
-        </TextBlock>
--->
+      <my:AdMediatorControl x:Name="AdMediator_4DD4AE" HorizontalAlignment="Left" Height="50" Id="AdMediator-Id-B09CECEB-96CD-4030-9AAB-64F04FC28D62" VerticalAlignment="Top" Width="320"/>-->
 
     </Grid>
 
