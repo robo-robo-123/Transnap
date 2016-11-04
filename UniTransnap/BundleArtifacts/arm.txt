@@ -1,0 +1,4 @@
+MainPackage=C:\Users\Takeshi\Documents\Visual Studio 2015\Projects\UniTransnap\UniTransnap\bin\ARM\Release\UniTransnap_1.1.12.0_ARM.appx
+SymbolPackage=C:\Users\Takeshi\Documents\Visual Studio 2015\Projects\UniTransnap\UniTransnap\AppPackages\UniTransnap_1.1.12.0_Test\UniTransnap_1.1.12.0_ARM.appxsym
+ResourcePack=C:\Users\Takeshi\Documents\Visual Studio 2015\Projects\UniTransnap\UniTransnap\bin\ARM\Release\UniTransnap_1.1.12.0_language-en.appx
+ResourcePack=C:\Users\Takeshi\Documents\Visual Studio 2015\Projects\UniTransnap\UniTransnap\bin\ARM\Release\UniTransnap_1.1.12.0_scale-100.appx
