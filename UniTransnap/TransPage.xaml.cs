@@ -18,6 +18,10 @@ using UniTransnap.Class;
 using System.Collections.ObjectModel;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Core;
+using System.Threading.Tasks;
+using System.Net.Http;
+using System.Net;
+using System.Diagnostics;
 
 // 空白ページのアイテム テンプレートについては、http://go.microsoft.com/fwlink/?LinkId=234238 を参照してください
 
@@ -28,34 +32,64 @@ namespace UniTransnap
   /// </summary>
   public sealed partial class TransPage : Page
   {
-    string authenticationHeaderValue = null;
+    string authenticationHeaderValue = string.Empty;
     AdmAuthentication admAuth;
     Windows.ApplicationModel.Resources.ResourceLoader rsrcs;
+    // AzureAuthToken authTokenSource;
 
     string before, after;
     ObservableCollection<History> HistView;
     string transResult;
     string ja, en, zh, es, ru, hi, ar, bn, pt, de;
     DataPackage dataPackage;
+
+    private const string SubscriptionKey = "3387e3b71ccd4a5fbbd7e8a39b3ccafb";
+    //Enter here the Key from your Microsoft Translator Text subscription on http://portal.azure.com
+
     public TransPage()
     {
       this.InitializeComponent();
 
-      admAuth = new AdmAuthentication();
+      //admAuth = new AdmAuthentication();
       HistView = new ObservableCollection<History>();
       dataPackage = new DataPackage();
       rsrcs = new Windows.ApplicationModel.Resources.ResourceLoader();
 
-      admAuth.AdmAuthentication2("roob_twi", "0OGK8MPcfIGFX6BtYhCbBI5V+EBp//2E3BF95HOu4Vs=");
+      //admAuth.AdmAuthentication2("roob_twi", "0OGK8MPcfIGFX6BtYhCbBI5V+EBp//2E3BF95HOu4Vs=");
 
       initializeCombobox();
-
 
       BeforeLanguageBox.SelectedIndex = 0;
       AfterLanguageBox.SelectedIndex = 1;
 
+      authenticationHeaderValue = Translate2();
 
+    }
 
+    private static string Translate2()
+    {
+      var authTokenSource = new AzureAuthToken(SubscriptionKey);
+      var authenticationHeaderValue = string.Empty;
+      try
+      {
+        authenticationHeaderValue = authTokenSource.GetAccessToken();
+      }
+      catch (HttpRequestException)
+      {
+
+        switch (authTokenSource.RequestStatusCode)
+        {
+          case HttpStatusCode.Unauthorized:
+            //Debug.WriteLine("Request to token service is not authorized (401). Check that the Azure subscription key is valid.");
+            break;
+          case HttpStatusCode.Forbidden:
+            //Debug.WriteLine("Request to token service is not authorized (403). For accounts in the free-tier, check that the account quota is not exceeded.");
+            break;
+        }
+        throw;
+
+      }
+      return authenticationHeaderValue;
     }
 
     private void IC()
@@ -112,9 +146,9 @@ namespace UniTransnap
       HistoryList.Header = resourceLoader.GetString("hstry");
     }
 
-/// <summary>
-/// メインファンクション
-/// </summary>
+    /// <summary>
+    /// メインファンクション
+    /// </summary>
 
     private void BeforeLanguageBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -179,22 +213,23 @@ namespace UniTransnap
         string y = HistView[x].before_word;
         InputTextBox.Text = y;
       }
-      catch(Exception ex)
+      catch (Exception ex)
       { }
-     // test(y);
+      // test(y);
     }
 
-  async private void TranslateButton_Tapped(object sender, TappedRoutedEventArgs e)
+    async private void TranslateButton_Tapped(object sender, TappedRoutedEventArgs e)
     {
-      if (authenticationHeaderValue == null)
+      if (authenticationHeaderValue == string.Empty)
       {
         try
         {
-          getToken();
+          //  authenticationHeaderValue = await authTokenSource.GetAccessTokenAsync();
+          authenticationHeaderValue = Translate2();
         }
         catch
         {
-          this.webDlg.Title = rsrcs.GetString("plzwrd");  var result = await this.webDlg.ShowAsync();
+          this.webDlg.Title = rsrcs.GetString("plzwrd"); var result = await this.webDlg.ShowAsync();
           return;
         }
       }
@@ -204,12 +239,13 @@ namespace UniTransnap
       else
       {
         string data;
-        if (InputTextBox.Text == "") { this.webDlg.Title = "言葉を入力してください"; var result = await this.webDlg.ShowAsync();  }
+        if (InputTextBox.Text == "") { this.webDlg.Title = "言葉を入力してください"; var result = await this.webDlg.ShowAsync(); }
         else
         {
           Translator.LanguageServiceClient client = new Translator.LanguageServiceClient();
           // TextBoxに入力した文章を英語から日本語への翻訳を行う
           var result = await client.TranslateAsync(authenticationHeaderValue, InputTextBox.Text, before, after, null, null);
+          //var result = await client.TranslateAsync(authenticationHeaderValue, "Hello World", "en", "fr", null, "general");
           OutputTextBox.DataContext = new { op = result };
           HistView.Add(new History { before_langage = (string)BeforeLanguageBox.SelectedItem, after_langage = (string)AfterLanguageBox.SelectedItem, before_word = InputTextBox.Text, after_word = result });
           HistoryList.ItemsSource = HistView;
@@ -220,8 +256,8 @@ namespace UniTransnap
           catch (Exception ex)
           {
           }
-         // data = (string)BeforeLanguageBox.SelectedItem + "/" + (string)AfterLanguageBox.SelectedItem + "/" + InputTextBox.Text + "/" + result + "\n";
-         // DataSave(data);
+          // data = (string)BeforeLanguageBox.SelectedItem + "/" + (string)AfterLanguageBox.SelectedItem + "/" + InputTextBox.Text + "/" + result + "\n";
+          // DataSave(data);
         }
       }
     }
@@ -238,8 +274,8 @@ namespace UniTransnap
 
       try
       {
-      int x = HistoryList.SelectedIndex;
-      string msg = HistView[x].before_langage + "/" + HistView[x].after_langage + "/" + HistView[x].before_word + "/" + HistView[x].after_word + "\n";
+        int x = HistoryList.SelectedIndex;
+        string msg = HistView[x].before_langage + "/" + HistView[x].after_langage + "/" + HistView[x].before_word + "/" + HistView[x].after_word + "\n";
         DataSave(msg);
         /*
         IList<Object> items = HistoryList.SelectedItems as IList<Object>;
@@ -251,7 +287,7 @@ namespace UniTransnap
         */
         //OutputTextBox.Text = msg;
       }
-      catch(Exception ex)
+      catch (Exception ex)
       { }
       // data = (string)BeforeLanguageBox.SelectedItem + "/" + (string)AfterLanguageBox.SelectedItem + "/" + InputTextBox.Text + "/" + result + "\n";
       // DataSave(data);
@@ -344,7 +380,7 @@ namespace UniTransnap
         IList<String> strList = await FileIO.ReadLinesAsync(file);
         foreach (String str in strList)
         {
-          
+
           //          msg = str;
           DataRestore(str);
           //          datas.Add(str);
@@ -391,56 +427,56 @@ namespace UniTransnap
       try
       {
         int x = HistoryList.SelectedIndex;
-      HistView.RemoveAt(x);
+        HistView.RemoveAt(x);
       }
       catch { }
 
-  /*
-        for (int i = 0; i < HistView.Count; i++)
-        {
-          HistView.RemoveAt(i);
-        }
-        String filePath = "date1.txt";
-        StorageFolder roamingFolder = ApplicationData.Current.RoamingFolder;
-        try
-        {
-          StorageFile file = await roamingFolder.GetFileAsync(filePath);
+      /*
+            for (int i = 0; i < HistView.Count; i++)
+            {
+              HistView.RemoveAt(i);
+            }
+            String filePath = "date1.txt";
+            StorageFolder roamingFolder = ApplicationData.Current.RoamingFolder;
+            try
+            {
+              StorageFile file = await roamingFolder.GetFileAsync(filePath);
 
+              try
+              {
+                await file.DeleteAsync();
+              }
+              catch { }
+            }
+            catch (Exception ex)
+            {
+              // ファイル無し
+            }
+
+          StorageFolder localFolder = ApplicationData.Current.LocalFolder;
           try
           {
-            await file.DeleteAsync();
+            StorageFile file = await localFolder.CreateFileAsync(filePath, CreationCollisionOption.ReplaceExisting);
+            datas.RemoveAt(index);
+            foreach (String str in datas)
+            {
+              await FileIO.AppendTextAsync(file, str + '\n');
+            }
           }
-          catch { }
-        }
-        catch (Exception ex)
-        {
-          // ファイル無し
-        }
 
-      StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-      try
-      {
-        StorageFile file = await localFolder.CreateFileAsync(filePath, CreationCollisionOption.ReplaceExisting);
-        datas.RemoveAt(index);
-        foreach (String str in datas)
-        {
-          await FileIO.AppendTextAsync(file, str + '\n');
-        }
-      }
+          catch (Exception ex)
+          {
 
-      catch (Exception ex)
-      {
-
-      }
-      */
+          }
+          */
     }
 
 
-/// <summary>
-/// クリップボードへコピーなど、そこら辺を行う。
-/// </summary>
-/// <param name="sender"></param>
-/// <param name="e"></param>
+    /// <summary>
+    /// クリップボードへコピーなど、そこら辺を行う。
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
 
 
 
