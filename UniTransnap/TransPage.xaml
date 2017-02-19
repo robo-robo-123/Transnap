@@ -29,15 +29,15 @@
           <FontIcon Glyph="&#xE72D;" FontFamily="Segoe MDL2 Assets" FontSize="20" />
         </AppBarButton.Icon>
       </AppBarButton>
- -->
 
       <AppBarButton x:Name="saveButton" x:Uid="slctdListSave" Label="save" Click="saveButton_Click"  >
         <AppBarButton.Icon>
           <FontIcon Glyph="&#xE74E;" FontFamily="Segoe MDL2 Assets" FontSize="20" />
         </AppBarButton.Icon>
       </AppBarButton>
+ -->
 
-      <AppBarButton x:Name="reloadButton" x:Uid="slctdListReload" Label="reload" Click="reloadButton_Click"  >
+            <AppBarButton x:Name="reloadButton" x:Uid="slctdListReload" Label="reload" Click="reloadButton_Click"  >
         <AppBarButton.Icon>
           <FontIcon Glyph="&#xE7A6;" FontFamily="Segoe MDL2 Assets" FontSize="20" />
         </AppBarButton.Icon>
@@ -105,8 +105,8 @@
 
 
     <!-- Back button and page title -->
-    <Grid x:Name="adGrid1" Grid.Row="5" Background="LightBlue" Width="160" Height="600" Margin="0,0,0,0" HorizontalAlignment="Right" VerticalAlignment="Bottom" >
-            <UI:AdControl  x:Name="AdMediator_43F460" Height="600" ApplicationId="3f83fe91-d6be-434d-a0ae-7351c5a997f1" AdUnitId="10865270" Width="160"/>
+    <Grid x:Name="adGrid1" Grid.Row="5" Background="LightBlue" Width="300" Height="250" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Bottom" >
+            <UI:AdControl  x:Name="AdMediator_43F460" Height="250" ApplicationId="3f83fe91-d6be-434d-a0ae-7351c5a997f1" AdUnitId="10865270" Width="300"/>
       <!-- 広告が来ないときに表示するコンテンツ
       <TextBlock  Text="広告欄" Foreground="White" FontSize="18"
                        HorizontalAlignment="Right" Margin="0,5,5,0"/> 
@@ -140,10 +140,10 @@
             <Setter Target="HistoryList.(RelativePanel.Below)"  Value=""/>
             <Setter Target="adGrid1.Visibility" Value="Visible" />
             <Setter Target="adGrid2.Visibility" Value="Collapsed" />
-            <Setter Target="HistoryList.Margin" Value="0,0,-160,0"/>
           </VisualState.Setters>
           <!-- The default Visibility properties are set in the XAML that defines the objects. -->
         </VisualState>
+          <!--
         <VisualState x:Name="collumRegion">
           <VisualState.StateTriggers>
             <AdaptiveTrigger MinWindowWidth="640" />
@@ -154,15 +154,17 @@
             <Setter Target="adGrid2.Visibility" Value="Visible" />
             <Setter Target="adGrid1.Visibility" Value="Collapsed" />
           </VisualState.Setters>
-          <!-- The default Visibility properties are set in the XAML that defines the objects. -->
         </VisualState>
+          -->
         <VisualState x:Name="ContentRegion">
           <VisualState.StateTriggers>
             <AdaptiveTrigger MinWindowWidth="450" />
           </VisualState.StateTriggers>
           <VisualState.Setters>
-            <Setter Target="adGrid1.Visibility" Value="Collapsed" />
-            <Setter Target="adGrid2.Visibility" Value="Visible" />
+                        <Setter Target="HistoryList.(RelativePanel.RightOf)"  Value="transferPanel"/>
+                        <Setter Target="HistoryList.(RelativePanel.Below)"  Value=""/>
+                        <Setter Target="adGrid1.Visibility" Value="Visible" />
+                        <Setter Target="adGrid2.Visibility" Value="Collapsed" />
           </VisualState.Setters>
           <!-- The default Visibility properties are set in the XAML that defines the objects. -->
         </VisualState>

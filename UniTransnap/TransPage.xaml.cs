@@ -22,6 +22,9 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net;
 using System.Diagnostics;
+using SQLite.Net;
+using SQLite.Net.Platform.WinRT;
+using SQLite.Net.Attributes;
 
 // 空白ページのアイテム テンプレートについては、http://go.microsoft.com/fwlink/?LinkId=234238 を参照してください
 
@@ -33,9 +36,11 @@ namespace UniTransnap
   public sealed partial class TransPage : Page
   {
     string authenticationHeaderValue = string.Empty;
-    AdmAuthentication admAuth;
+    //AdmAuthentication admAuth;
     Windows.ApplicationModel.Resources.ResourceLoader rsrcs;
     // AzureAuthToken authTokenSource;
+
+    SQLiteConnection db;
 
     string before, after;
     ObservableCollection<History> HistView;
@@ -64,6 +69,19 @@ namespace UniTransnap
 
       authenticationHeaderValue = Translate2();
 
+      string storagePath = Path.Combine(ApplicationData.Current.LocalFolder.Path, "Storage.sqlite");
+      db = new SQLiteConnection(new SQLitePlatformWinRT(), storagePath);
+      // テーブルの作成
+      try
+      {
+        db.CreateTable<History>();
+      }
+      catch
+      {
+        db.DropTable<History>();
+        db.CreateTable<History>();
+
+      }
     }
 
     private static string Translate2()
@@ -149,6 +167,29 @@ namespace UniTransnap
     /// <summary>
     /// メインファンクション
     /// </summary>
+    /// 
+    protected override void OnNavigatedTo(NavigationEventArgs e)
+    {
+      DataStore();
+    }
+
+    /// <summary>
+    /// データのセーブや読み込みなどを行う
+    /// </summary>
+    private void DataStore()
+    {
+
+      HistView.Clear();
+      var items = db.Table<History>();
+      foreach (var item in items)
+      {
+        item.before_langage += "test!";
+
+        HistView.Insert(0, item);
+        HistoryList.ItemsSource = HistView;
+
+      }
+    }
 
     private void BeforeLanguageBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
@@ -178,21 +219,6 @@ namespace UniTransnap
       else if (AfterLanguageBox.SelectedIndex == 8) after = "bn";
       else if (AfterLanguageBox.SelectedIndex == 9) after = "pt";
     }
-    private void getToken()
-    {
-      AdmAccessToken admToken;
-
-      try
-      {
-        admToken = admAuth.GetAccessToken();
-        authenticationHeaderValue = "Bearer " + admToken.access_token;
-      }
-      catch (Exception e)
-      {
-        dialogView();
-      }
-    }
-
 
     private async void dialogView()
     {
@@ -224,7 +250,6 @@ namespace UniTransnap
       {
         try
         {
-          //  authenticationHeaderValue = await authTokenSource.GetAccessTokenAsync();
           authenticationHeaderValue = Translate2();
         }
         catch
@@ -245,19 +270,22 @@ namespace UniTransnap
           Translator.LanguageServiceClient client = new Translator.LanguageServiceClient();
           // TextBoxに入力した文章を英語から日本語への翻訳を行う
           var result = await client.TranslateAsync(authenticationHeaderValue, InputTextBox.Text, before, after, null, null);
-          //var result = await client.TranslateAsync(authenticationHeaderValue, "Hello World", "en", "fr", null, "general");
           OutputTextBox.DataContext = new { op = result };
-          HistView.Add(new History { before_langage = (string)BeforeLanguageBox.SelectedItem, after_langage = (string)AfterLanguageBox.SelectedItem, before_word = InputTextBox.Text, after_word = result });
-          HistoryList.ItemsSource = HistView;
+
+          History history = new History() { before_langage = (string)BeforeLanguageBox.SelectedItem, after_langage = (string)AfterLanguageBox.SelectedItem, before_word = InputTextBox.Text, after_word = result };
+
+          db.Insert(history);
+
           transResult = result;
-          try
+
+          HistView.Clear();
+          var items = db.Table<History>();
+          foreach(var item in items)
           {
+            HistView.Insert(0, item);
+            HistoryList.ItemsSource = HistView;
           }
-          catch (Exception ex)
-          {
-          }
-          // data = (string)BeforeLanguageBox.SelectedItem + "/" + (string)AfterLanguageBox.SelectedItem + "/" + InputTextBox.Text + "/" + result + "\n";
-          // DataSave(data);
+          
         }
       }
     }
@@ -266,32 +294,6 @@ namespace UniTransnap
     {
       dataPackage.SetText(transResult);
       Clipboard.SetContent(dataPackage);
-    }
-
-    private void saveButton_Click(object sender, RoutedEventArgs e)
-    {
-
-
-      try
-      {
-        int x = HistoryList.SelectedIndex;
-        string msg = HistView[x].before_langage + "/" + HistView[x].after_langage + "/" + HistView[x].before_word + "/" + HistView[x].after_word + "\n";
-        DataSave(msg);
-        /*
-        IList<Object> items = HistoryList.SelectedItems as IList<Object>;
-        string msg ="";
-        foreach (Object item in items)
-        {
-          msg += items.ToString();
-        }
-        */
-        //OutputTextBox.Text = msg;
-      }
-      catch (Exception ex)
-      { }
-      // data = (string)BeforeLanguageBox.SelectedItem + "/" + (string)AfterLanguageBox.SelectedItem + "/" + InputTextBox.Text + "/" + result + "\n";
-      // DataSave(data);
-
     }
 
     private void copyClipboardButton_Tapped(object sender, TappedRoutedEventArgs e)
@@ -307,26 +309,20 @@ namespace UniTransnap
 
     }
 
-    private async void allDeleteButton_Tapped(object sender, TappedRoutedEventArgs e)
+    private void allDeleteButton_Tapped(object sender, TappedRoutedEventArgs e)
     {
 
-      String filePath = "date1.txt";
-      StorageFolder roamingFolder = ApplicationData.Current.RoamingFolder;
-      try
-      {
-        StorageFile file = await roamingFolder.GetFileAsync(filePath);
+      db.DropTable<History>();
+      db.CreateTable<History>();
 
-        try
-        {
-          await file.DeleteAsync();
-          HistoryList.ItemsSource = null;
-        }
-        catch { }
-      }
-      catch (Exception ex)
+      HistView.Clear();
+      var items = db.Table<History>();
+      foreach (var item in items)
       {
-        // ファイル無し
+        HistView.Add(item);
+        HistoryList.ItemsSource = HistView;
       }
+
     }
 
     private void ResetButton_Click(object sender, RoutedEventArgs e)
@@ -360,115 +356,25 @@ namespace UniTransnap
 
     }
 
-
-    protected override void OnNavigatedTo(NavigationEventArgs e)
+    private void DeleteButton_Tapped(object sender, TappedRoutedEventArgs e)
     {
-      DataStore();
-    }
-
-    /// <summary>
-    /// データのセーブや読み込みなどを行う
-    /// </summary>
-    async private void DataStore()
-    {
-      //    string msg = null;
-      String filePath = "date1.txt";
-      StorageFolder roamingFolder = ApplicationData.Current.RoamingFolder;
       try
       {
-        StorageFile file = await roamingFolder.GetFileAsync(filePath);
-        IList<String> strList = await FileIO.ReadLinesAsync(file);
-        foreach (String str in strList)
-        {
-
-          //          msg = str;
-          DataRestore(str);
-          //          datas.Add(str);
-        }
-        //DataRestore(msg);
-      }
-      catch (Exception ex)
-      {
-        // ファイル無し
-      }
-
-    }
-
-    private void DataRestore(string msg0)
-    {
-      string[] msg1 = msg0.Split('/');
-      HistView.Add(new History { before_langage = msg1[0], after_langage = msg1[1], before_word = msg1[2], after_word = msg1[3] });
-      HistoryList.ItemsSource = HistView;
-    }
-
-    async private void DataSave(string data)
-    {
-
-      String filePath = "date1.txt";
-
-      try
-      {
-        StorageFolder roamingFolder = ApplicationData.Current.RoamingFolder;
-        StorageFile file = await roamingFolder.CreateFileAsync(filePath,
-          CreationCollisionOption.OpenIfExists);
-
-        //        data = "0/0/0/0/0/0\n";
-        await FileIO.AppendTextAsync(file, data);
-      }
-      catch (Exception ex)
-      { }
-      //      DataReset();
-    }
-
-    async private void DeleteButton_Tapped(object sender, TappedRoutedEventArgs e)
-    {
-
-
-      try
-      {
-        int x = HistoryList.SelectedIndex;
-        HistView.RemoveAt(x);
+        History x = (History)HistoryList.SelectedItems[0];
+        Debug.WriteLine(x.Id);
+        // データの削除2 (条件の指定)
+        db.Execute("DELETE FROM History WHERE Id = ?", x.Id);
       }
       catch { }
 
-      /*
-            for (int i = 0; i < HistView.Count; i++)
-            {
-              HistView.RemoveAt(i);
-            }
-            String filePath = "date1.txt";
-            StorageFolder roamingFolder = ApplicationData.Current.RoamingFolder;
-            try
-            {
-              StorageFile file = await roamingFolder.GetFileAsync(filePath);
+      HistView.Clear();
+      var items = db.Table<History>();
+      foreach (var item in items)
+      {
+        HistView.Insert(0, item);
+        HistoryList.ItemsSource = HistView;
 
-              try
-              {
-                await file.DeleteAsync();
-              }
-              catch { }
-            }
-            catch (Exception ex)
-            {
-              // ファイル無し
-            }
-
-          StorageFolder localFolder = ApplicationData.Current.LocalFolder;
-          try
-          {
-            StorageFile file = await localFolder.CreateFileAsync(filePath, CreationCollisionOption.ReplaceExisting);
-            datas.RemoveAt(index);
-            foreach (String str in datas)
-            {
-              await FileIO.AppendTextAsync(file, str + '\n');
-            }
-          }
-
-          catch (Exception ex)
-          {
-
-          }
-          */
+      }
     }
 
 
@@ -483,8 +389,6 @@ namespace UniTransnap
     private void HistoryList_Tapped(object sender, TappedRoutedEventArgs e)
     {
       IC();
-
-
     }
 
     /// <summary>
@@ -513,7 +417,6 @@ namespace UniTransnap
       {
         int i = HistoryList.SelectedIndex;
         DataRequest request = e.Request;
-        //          request.Data.Properties.ApplicationName = "タイプ相性チェッカー";
         request.Data.Properties.Title = resourceLoader.GetString("trnsltrslt");
         request.Data.Properties.Description = resourceLoader.GetString("outrslt");
         if (HistoryList.SelectedItem == null) request.Data.SetText(resourceLoader.GetString("lstslct"));
@@ -524,6 +427,9 @@ namespace UniTransnap
     }
 
 
+
+
+
     /// <summary>
     /// 定義したクラス
     /// </summary>
@@ -531,6 +437,9 @@ namespace UniTransnap
     [DataContract]
     public class History
     {
+      [PrimaryKey, AutoIncrement]
+      public int Id { get; set; }
+
       [DataMember]
       public string before_langage { get; set; }
       [DataMember]
