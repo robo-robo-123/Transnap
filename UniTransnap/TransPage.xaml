@@ -23,19 +23,6 @@
           <FontIcon Glyph="&#xE8C8;" FontFamily="Segoe MDL2 Assets" FontSize="20" />
         </AppBarButton.Icon>
       </AppBarButton>
-      <!--
-      <AppBarButton x:Name="shareButton"  Label="share" Click="shareButton_Click"  >
-        <AppBarButton.Icon>
-          <FontIcon Glyph="&#xE72D;" FontFamily="Segoe MDL2 Assets" FontSize="20" />
-        </AppBarButton.Icon>
-      </AppBarButton>
-
-      <AppBarButton x:Name="saveButton" x:Uid="slctdListSave" Label="save" Click="saveButton_Click"  >
-        <AppBarButton.Icon>
-          <FontIcon Glyph="&#xE74E;" FontFamily="Segoe MDL2 Assets" FontSize="20" />
-        </AppBarButton.Icon>
-      </AppBarButton>
- -->
 
             <AppBarButton x:Name="reloadButton" x:Uid="slctdListReload" Label="reload" Click="reloadButton_Click"  >
         <AppBarButton.Icon>
@@ -106,7 +93,7 @@
 
     <!-- Back button and page title -->
     <Grid x:Name="adGrid1" Grid.Row="5" Background="LightBlue" Width="300" Height="250" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Bottom" >
-            <UI:AdControl  x:Name="AdMediator_43F460" Height="250" ApplicationId="3f83fe91-d6be-434d-a0ae-7351c5a997f1" AdUnitId="10865270" Width="300"/>
+            <UI:AdControl  x:Name="AdMediator_43F460" Height="250" ApplicationId="df0d17b7-f6b0-4d75-8f59-8b17430cd226" AdUnitId="306268" Width="300"/>
       <!-- 広告が来ないときに表示するコンテンツ
       <TextBlock  Text="広告欄" Foreground="White" FontSize="18"
                        HorizontalAlignment="Right" Margin="0,5,5,0"/> 
@@ -115,7 +102,7 @@
 
     <Grid x:Name="adGrid2" Grid.Row="5" Background="LightBlue" Width="320" Height="50" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"  RelativePanel.Below="HistoryList">
 
-            <UI:AdControl  x:Name="AdMediator_3F8F17" Height="50" ApplicationId="3f83fe91-d6be-434d-a0ae-7351c5a997f1" AdUnitId="10865270" Width="320" Margin="0,0,0,0"/>
+            <UI:AdControl  x:Name="AdMediator_3F8F17" Height="50" ApplicationId="930cc186-7c85-4aa1-874d-d7cc8e75f3ec" AdUnitId="308534" Width="320" Margin="0,0,0,0"/>
       <!--  広告が来ないときに表示するコンテンツ 
       <TextBlock  Text="広告欄" Foreground="White" FontSize="18"
                        HorizontalAlignment="Right" Margin="0,5,5,0"/>

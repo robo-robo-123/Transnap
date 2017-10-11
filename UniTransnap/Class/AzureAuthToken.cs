@@ -129,7 +129,14 @@ namespace UniTransnap
             }
             else if (task.IsCanceled)
             {
-                throw new Exception("Timeout obtaining access token.");
+                try
+                {
+                    throw new Exception("Timeout obtaining access token.");
+                }
+                catch (Exception ex)
+                {
+
+                }
             }
             System.Diagnostics.Debug.WriteLine("d" + accessToken);
 

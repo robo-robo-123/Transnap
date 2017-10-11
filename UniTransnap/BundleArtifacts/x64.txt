@@ -1,2 +1,2 @@
-MainPackage=C:\Users\Takeshi\Documents\Visual Studio 2015\Projects\UniTransnap\UniTransnap\bin\x64\Release\UniTransnap_1.1.12.0_x64.appx
-SymbolPackage=C:\Users\Takeshi\Documents\Visual Studio 2015\Projects\UniTransnap\UniTransnap\AppPackages\UniTransnap_1.1.12.0_Test\UniTransnap_1.1.12.0_x64.appxsym
+MainPackage=C:\Users\Takeshi\Documents\Visual Studio 2017\Projects\UniTransnap\UniTransnap\bin\x64\Release\UniTransnap_1.1.20.0_x64.appx
+SymbolPackage=C:\Users\Takeshi\Documents\Visual Studio 2017\Projects\UniTransnap\UniTransnap\AppPackages\UniTransnap_1.1.20.0_Test\UniTransnap_1.1.20.0_x64.appxsym
