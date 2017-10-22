@@ -29,4 +29,30 @@ namespace UniTransnap.Class
         public string after_word { get; set; }
     }
 
+
+
+
+
+    /// <summary>
+    /// 定義したクラス
+    /// </summary>
+    /*
+        [DataContract]
+        public class History_old
+        {
+          [PrimaryKey, AutoIncrement]
+          public int Id { get; set; }
+
+          [DataMember]
+          public string before_langage { get; set; }
+          [DataMember]
+          public string after_langage { get; set; }
+          [DataMember]
+          public string before_word { get; set; }
+          [DataMember]
+          public string after_word { get; set; }
+        }
+        */
+
+
 }
