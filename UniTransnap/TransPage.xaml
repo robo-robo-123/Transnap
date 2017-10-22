@@ -1,0 +1,201 @@
+﻿<Page 
+    x:Class="UniTransnap.TransPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UniTransnap"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <!--xmlns:UI="using:Microsoft.Advertising.WinRT.UI"-->
+     
+    
+  <Page.BottomAppBar>
+    <CommandBar x:Name="mainCommandBar" ClosedDisplayMode="Minimal" VerticalAlignment="Bottom" IsOpen="False">
+      <CommandBar.SecondaryCommands>
+
+        <AppBarButton x:Name="allDeleteButton" x:Uid="aldlt" Label="保存した結果を削除" Tapped="allDeleteButton_Tapped"  />
+      </CommandBar.SecondaryCommands>
+
+      <AppBarButton x:Name="DeleteButton" x:Uid="slctdListDelete" Icon="Delete" Label="リストから削除" 
+                        VerticalAlignment="Stretch" ToolTipService.ToolTip="履歴を削除します" Tapped="DeleteButton_Tapped" ></AppBarButton>
+
+      <AppBarButton x:Name="copyClipboardButton" x:Uid="slctdListCopy"  Label="Copy to clipboard" Tapped="copyClipboardButton_Tapped"  >
+        <AppBarButton.Icon>
+          <FontIcon Glyph="&#xE8C8;" FontFamily="Segoe MDL2 Assets" FontSize="20" />
+        </AppBarButton.Icon>
+      </AppBarButton>
+
+            <AppBarButton x:Name="reloadButton" x:Uid="slctdListReload" Label="reload" Click="reloadButton_Click"  >
+        <AppBarButton.Icon>
+          <FontIcon Glyph="&#xE7A6;" FontFamily="Segoe MDL2 Assets" FontSize="20" />
+        </AppBarButton.Icon>
+      </AppBarButton>
+
+    </CommandBar>
+  </Page.BottomAppBar>
+
+
+    <Grid Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
+
+        <RelativePanel>
+
+            <StackPanel x:Name="transferPanel" Width="360" Margin="0,0,0,9" >
+                <!--  Background="{ThemeResource SystemAltHighColor}" -->
+                <StackPanel Background="{ThemeResource SystemControlAccentDark1AcrylicWindowAccentDark1Brush}" Margin="0,0,0,15" Padding="10">
+
+                    <!--
+                    <StackPanel Orientation="Horizontal" >
+
+                        <ComboBox x:Name="BeforeLanguageBox"  x:Uid="bfrlng" SelectionChanged="BeforeLanguageBox_SelectionChanged" ToolTipService.ToolTip=""  
+                                  PlaceholderText="翻訳元言語を選択してください" Width="300" HorizontalAlignment="Left" Margin="0,0,0,15"/>
+                        <Button x:Name="ChengeButton"  Content="⇕" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="14" Tapped="ChengeButton_Tapped" Margin="8,0,0,0" ></Button>
+                    </StackPanel>
+                    -->
+                    
+                    <ComboBox x:Name="AfterLanguageBox" x:Uid="aftlng"  SelectionChanged="AfterLanguageBox_SelectionChanged" PlaceholderText="翻訳先言語を選択してください" Width="300"/>
+                </StackPanel>
+
+
+
+                <StackPanel Background="{ThemeResource SystemControlAccentDark2AcrylicWindowAccentDark2MediumHighBrush}" Padding="10">
+
+                    <TextBox x:Name="InputTextBox" x:Uid="bfrwrd" PlaceholderText="翻訳したい言葉を記入して下さい" 
+                                 MaxLength="500" TextWrapping="Wrap" MaxWidth="300" Width="300" Margin="0,0,0,15" HorizontalAlignment="Left"/>
+
+                    <TextBox x:Name="OutputTextBox" x:Uid="aftwrd" IsReadOnly="True" Text="{Binding op, Mode=TwoWay}" PlaceholderText="翻訳結果がここに出力されます"  MaxWidth="300" TextWrapping="Wrap" 
+                         Width="300" HorizontalAlignment="Left" Margin="0,0,0,15"/>
+
+                    <CommandBar Background="{ThemeResource SystemControlAccentDark2AcrylicWindowAccentDark2MediumHighBrush}" >
+                        <AppBarButton x:Name="changeWordButton" Label="入れ替え" Content="⇕" Margin="10,0,0,0" Click="changeWordButton_Click" />
+
+                        <AppBarButton x:Name="ResetButton" Icon="Refresh" Label="リセット" Content="リセット" Click="ResetButton_Click"/>
+                        <AppBarButton x:Name="TranslateButton" Grid.Row="1" Icon="Go" Label="翻訳" x:Uid="trnslt"  Content="翻訳"  Tapped="TranslateButton_Tapped" Margin="10,0,0,0" />
+
+                    </CommandBar>
+                
+                </StackPanel>
+            </StackPanel>
+
+      
+
+
+
+<!--
+            <RelativePanel Margin="1,150,0,-100" HorizontalAlignment="Left" >
+      <RelativePanel x:Name="transferPanel">
+        <StackPanel x:Name="langPanel" Orientation="Horizontal"  >
+        </StackPanel>
+        <RelativePanel x:Name="buttonPanel" RelativePanel.Below="beforeWordPanel" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" HorizontalAlignment="Center">
+        </RelativePanel>
+        <RelativePanel x:Name="afterWordPanel"  RelativePanel.Below="buttonPanel"  RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True">-->
+          <!--<Button x:Name="CopyButton"  x:Uid="clpcpy"  Content="コピー"  Tapped="CopyButton_Tapped" VerticalAlignment="Top" Margin="-0.333,36,0.333,0" RelativePanel.RightOf="OutputTextBox" HorizontalAlignment="Right" ToolTipService.ToolTip="クリップボードにコピー"/>-->
+<!--        </RelativePanel>
+      </RelativePanel>-->
+      <ListView x:Name="HistoryList" x:Uid="hstry" Header="履歴" SelectionMode="Single"   ItemsSource="{Binding}"  IsRightTapEnabled="False"  Margin="25,0" 
+    			Grid.Row="4" FontSize="24" Tapped="HistoryList_Tapped" RelativePanel.Below="transferPanel" MaxWidth="500" MinWidth="360"
+                >
+        <ListView.ItemTemplate>
+          <DataTemplate>
+            <StackPanel x:Name="checkPanel" Orientation="Vertical" >
+
+              <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding before_langage}" FontSize="12" FontFamily="Segoe UI" Margin="5,0,0,0" Padding="5,5,0,0"/>
+                <TextBlock Text="→" FontSize="12" FontFamily="Segoe UI" Margin="5,0,0,0" Padding="5,5,0,0"/>
+                <TextBlock Text="{Binding after_langage}" FontSize="12" FontFamily="Segoe UI" Margin="5,0" Padding="5,5,0,0"/>
+              </StackPanel>
+
+              <TextBlock Text="{Binding before_word}" FontSize="16" FontFamily="Segoe UI" Margin="5,0" Padding="5,5,0,0" TextWrapping="Wrap"/>
+              <TextBlock Text="{Binding after_word}" FontSize="16" FontFamily="Segoe UI" Margin="5,0" Padding="5,0,0,5" TextWrapping="Wrap"/>
+            </StackPanel>
+
+          </DataTemplate>
+        </ListView.ItemTemplate>
+      </ListView>
+
+
+
+
+    </RelativePanel>
+
+
+    <!-- Back button and page title -->
+    <Grid x:Name="adGrid1" Grid.Row="5" Background="LightBlue" Width="300" Height="250" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Bottom" >
+
+            <!--
+        <UI:AdControl  x:Name="AdMediator_43F460" Height="250" ApplicationId="df0d17b7-f6b0-4d75-8f59-8b17430cd226" AdUnitId="306268" Width="300"/>
+       広告が来ないときに表示するコンテンツ
+      <TextBlock  Text="広告欄" Foreground="White" FontSize="18"
+                       HorizontalAlignment="Right" Margin="0,5,5,0"/> 
+      <my:AdMediatorControl x:Name="AdMediator_DA0686" HorizontalAlignment="Left" Height="600" Id="AdMediator-Id-7331D572-62A6-4A0B-A2D5-7AFBA3CFFCC6" VerticalAlignment="Top" Width="160"/>-->
+    </Grid>
+
+    <Grid x:Name="adGrid2" Grid.Row="5" Background="LightBlue" Width="320" Height="50" Margin="0,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"  RelativePanel.Below="HistoryList">
+
+            <!--
+            <UI:AdControl  x:Name="AdMediator_3F8F17" Height="50" ApplicationId="930cc186-7c85-4aa1-874d-d7cc8e75f3ec" AdUnitId="308534" Width="320" Margin="0,0,0,0"/>
+        広告が来ないときに表示するコンテンツ 
+      <TextBlock  Text="広告欄" Foreground="White" FontSize="18"
+                       HorizontalAlignment="Right" Margin="0,5,5,0"/>
+      <my:AdMediatorControl x:Name="AdMediator_4DD4AE" HorizontalAlignment="Left" Height="50" Id="AdMediator-Id-B09CECEB-96CD-4030-9AAB-64F04FC28D62" VerticalAlignment="Top" Width="320"/>
+-->
+    </Grid>
+
+    <ContentDialog x:Name="webDlg"
+                       Title="ex"
+                       IsPrimaryButtonEnabled="True"
+                       PrimaryButtonText="OK" d:IsHidden="True">
+    </ContentDialog>
+
+    <VisualStateManager.VisualStateGroups>
+      <VisualStateGroup>
+        <VisualState x:Name="adcollumRegion">
+          <VisualState.StateTriggers>
+            <AdaptiveTrigger MinWindowWidth="800" />
+          </VisualState.StateTriggers>
+          <VisualState.Setters>
+            <Setter Target="HistoryList.(RelativePanel.RightOf)"  Value="transferPanel"/>
+            <Setter Target="HistoryList.(RelativePanel.Below)"  Value=""/>
+            <Setter Target="adGrid1.Visibility" Value="Visible" />
+            <Setter Target="adGrid2.Visibility" Value="Collapsed" />
+          </VisualState.Setters>
+          <!-- The default Visibility properties are set in the XAML that defines the objects. -->
+        </VisualState>
+          <!--
+        <VisualState x:Name="collumRegion">
+          <VisualState.StateTriggers>
+            <AdaptiveTrigger MinWindowWidth="640" />
+          </VisualState.StateTriggers>
+          <VisualState.Setters>
+            <Setter Target="HistoryList.(RelativePanel.RightOf)"  Value="transferPanel"/>
+            <Setter Target="HistoryList.(RelativePanel.Below)"  Value=""/>
+            <Setter Target="adGrid2.Visibility" Value="Visible" />
+            <Setter Target="adGrid1.Visibility" Value="Collapsed" />
+          </VisualState.Setters>
+        </VisualState>
+          -->
+        <VisualState x:Name="ContentRegion">
+          <VisualState.StateTriggers>
+            <AdaptiveTrigger MinWindowWidth="450" />
+          </VisualState.StateTriggers>
+          <VisualState.Setters>
+                        <Setter Target="HistoryList.(RelativePanel.RightOf)"  Value="transferPanel"/>
+                        <Setter Target="HistoryList.(RelativePanel.Below)"  Value=""/>
+                        <Setter Target="adGrid1.Visibility" Value="Visible" />
+                        <Setter Target="adGrid2.Visibility" Value="Collapsed" />
+          </VisualState.Setters>
+          <!-- The default Visibility properties are set in the XAML that defines the objects. -->
+        </VisualState>
+        <VisualState x:Name="MiniContentRegion">
+          <VisualState.StateTriggers>
+            <AdaptiveTrigger MinWindowWidth="0" />
+          </VisualState.StateTriggers>
+          <VisualState.Setters>
+            <Setter Target="adGrid1.Visibility" Value="Collapsed" />
+            <Setter Target="adGrid2.Visibility" Value="Visible" />
+          </VisualState.Setters>
+        </VisualState>
+      </VisualStateGroup>
+    </VisualStateManager.VisualStateGroups>
+
+  </Grid>
+</Page>
