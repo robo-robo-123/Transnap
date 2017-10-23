@@ -34,10 +34,7 @@ namespace UniTransnap
     public sealed partial class TransPage : Page
     {
         string authenticationHeaderValue = string.Empty;
-        //AdmAuthentication admAuth;
         Windows.ApplicationModel.Resources.ResourceLoader rsrcs;
-        // AzureAuthToken authTokenSource;
-
 
         string before, after;
         string transResult;
@@ -55,13 +52,10 @@ namespace UniTransnap
             dataPackage = new DataPackage();
             rsrcs = new Windows.ApplicationModel.Resources.ResourceLoader();
 
-            //admAuth.AdmAuthentication2("roob_twi", "0OGK8MPcfIGFX6BtYhCbBI5V+EBp//2E3BF95HOu4Vs=");
-
             initializeCombobox();
 
             //BeforeLanguageBox.SelectedIndex = 0;
             //AfterLanguageBox.SelectedIndex = 1;
-            //authenticationHeaderValue = Translate2();
 
 
             if (ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.CompactOverlay))
@@ -77,34 +71,6 @@ namespace UniTransnap
         {
             await TranslatorService.Instance.InitializeAsync(SubscriptionKey);
         }
-
-        /*
-    private static string Translate2()
-    {
-      var authTokenSource = new AzureAuthToken(SubscriptionKey);
-      var authenticationHeaderValue = string.Empty;
-      try
-      {
-        authenticationHeaderValue = authTokenSource.GetAccessToken();
-      }
-      catch (HttpRequestException)
-      {
-
-        switch (authTokenSource.RequestStatusCode)
-        {
-          case HttpStatusCode.Unauthorized:
-            //Debug.WriteLine("Request to token service is not authorized (401). Check that the Azure subscription key is valid.");
-            break;
-          case HttpStatusCode.Forbidden:
-            //Debug.WriteLine("Request to token service is not authorized (403). For accounts in the free-tier, check that the account quota is not exceeded.");
-            break;
-        }
-        throw;
-
-      }
-      return authenticationHeaderValue;
-    }
-    */
 
         private void IC()
         {
@@ -236,21 +202,6 @@ namespace UniTransnap
         async private void TranslateButton_Tapped(object sender, TappedRoutedEventArgs e)
         {
 
-            /*
-      if (authenticationHeaderValue == string.Empty)
-      {
-        try
-        {
-          authenticationHeaderValue = Translate2();
-        }
-        catch
-        {
-          this.webDlg.Title = rsrcs.GetString("plzwrd"); var result = await this.webDlg.ShowAsync();
-          return;
-        }
-      }
-      */
-
             //if (//BeforeLanguageBox.SelectedItem == null || AfterLanguageBox.SelectedItem == null)
             if (AfterLanguageBox.SelectedItem == null)
             { this.webDlg.Title = "言語を選択してください"; var result = await this.webDlg.ShowAsync(); }
@@ -319,7 +270,7 @@ namespace UniTransnap
                 catch (Exception ex)
                 { }
             }
-            
+
         }
 
         private void AllDeleteButton_Tapped(object sender, TappedRoutedEventArgs e)
