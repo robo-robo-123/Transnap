@@ -15,6 +15,16 @@
 
                 <AppBarButton x:Name="allDeleteButton" x:Uid="aldlt" Label="保存した結果を削除" Tapped="AllDeleteButton_Tapped"  />
             </CommandBar.SecondaryCommands>
+
+            <AppBarButton x:Name="pinpButton"  Visibility="Collapsed" Click="pinpButton_Click">
+                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8B9;" />
+            </AppBarButton>
+
+            <AppBarButton x:Name="standardButton" Visibility="Collapsed" Click="standard">
+                <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8B9;" />
+            </AppBarButton>
+
+
         </CommandBar>
     </Page.BottomAppBar>
 
@@ -23,7 +33,7 @@
 
         <RelativePanel>
 
-            <StackPanel x:Name="transferPanel" Width="360" Margin="0,0,0,9" >
+            <StackPanel x:Name="transferPanel" Width="360" Margin="0,0,0,9" Padding="0,30,0,0"  >
                 <!--  Background="{ThemeResource SystemAltHighColor}" -->
                 <StackPanel Background="{ThemeResource SystemControlAccentDark1AcrylicWindowAccentDark1Brush}" Margin="0,0,0,15" Padding="10">
 
@@ -79,9 +89,14 @@
             <ScrollViewer x:Name="HistoryPanel" RelativePanel.Below="transferPanel">
                 <StackPanel >
             <ListView x:Name="HistoryList" x:Uid="hstry" Header="履歴" SelectionMode="Single"   ItemsSource="{Binding}"  IsRightTapEnabled="False"  Margin="25,0" 
-    			Grid.Row="4" FontSize="24" Tapped="HistoryList_Tapped"  MaxWidth="500" MinWidth="360"
-                >
-                <ListView.ItemTemplate>
+    			Grid.Row="4" FontSize="24" Tapped="HistoryList_Tapped"  MaxWidth="500" MinWidth="360">
+                        <ListView.Resources>
+                            <MenuFlyout x:Name="allContactsMenuFlyout">
+                                <MenuFlyoutItem Text="Copy" Icon="Copy" />
+                                <MenuFlyoutItem Text="Delete" Icon="Delete" />
+                            </MenuFlyout>
+                        </ListView.Resources>
+                        <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel x:Name="checkPanel" Orientation="Vertical" >
 
@@ -100,7 +115,7 @@
                 
             </ListView>
 
-                <CommandBar x:Name="historyCommand" ClosedDisplayMode="Minimal">
+                    <CommandBar x:Name="historyCommand" ClosedDisplayMode="Minimal" Background="{ThemeResource SystemControlAcrylicWindowMediumHighBrush}">
 
 
                 <AppBarButton Icon="Share" Tapped="AppBarButton_Tapped"/>

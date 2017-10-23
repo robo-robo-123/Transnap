@@ -20,6 +20,8 @@ using Windows.ApplicationModel.DataTransfer;
 using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Toolkit.Uwp.Services.MicrosoftTranslator;
+using Windows.UI.ViewManagement;
+using Windows.UI;
 
 
 // 空白ページのアイテム テンプレートについては、http://go.microsoft.com/fwlink/?LinkId=234238 を参照してください
@@ -60,6 +62,12 @@ namespace UniTransnap
             //BeforeLanguageBox.SelectedIndex = 0;
             //AfterLanguageBox.SelectedIndex = 1;
             //authenticationHeaderValue = Translate2();
+
+
+            if (ApplicationView.GetForCurrentView().IsViewModeSupported(ApplicationViewMode.CompactOverlay))
+            {
+                pinpButton.Visibility = Visibility.Visible;
+            }
 
             TransratorInitialize();
 
@@ -456,6 +464,40 @@ namespace UniTransnap
 
 
 
+
+        private async void pinpButton_Click(object sender, RoutedEventArgs e)
+        {
+
+            var appView = ApplicationView.GetForCurrentView();
+            // タイトルバーにもUIを展開表示するための設定（これは必須ではありませんが、見た目的には必要）
+            Windows.ApplicationModel.Core.CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
+            appView.TitleBar.ButtonBackgroundColor = Colors.Transparent;
+            appView.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+
+
+            ViewModePreferences compactOptions = ViewModePreferences.CreateDefault(ApplicationViewMode.CompactOverlay);
+            compactOptions.CustomSize = new Windows.Foundation.Size(360, 800);
+
+            bool modeSwitched = await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.CompactOverlay, compactOptions);
+            pinpButton.Visibility = Visibility.Collapsed;
+            standardButton.Visibility = Visibility.Visible;
+        }
+
+        private async void standard(object sender, RoutedEventArgs e)
+        {
+            /*
+            var appView = ApplicationView.GetForCurrentView();
+            // タイトルバーを透過表示するための設定を元に戻す
+            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = false;
+            appView.TitleBar.ButtonBackgroundColor = null;
+            appView.TitleBar.ButtonInactiveBackgroundColor = null;
+            */
+
+            bool modeSwitched = await ApplicationView.GetForCurrentView().TryEnterViewModeAsync(ApplicationViewMode.Default);
+            standardButton.Visibility = Visibility.Collapsed;
+            pinpButton.Visibility = Visibility.Visible;
+
+        }
 
 
     }
